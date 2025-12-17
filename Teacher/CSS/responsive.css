@@ -1,0 +1,165 @@
+/* 响应式样式 - 补充 */
+
+/* 中等屏幕 (平板) */
+@media (max-width: 1024px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 15px 20px;
+    }
+    
+    .logo, .user-profile, .nav-menu, .sidebar-footer {
+        display: none;
+    }
+    
+    .sidebar::before {
+        content: "☰ 教师端菜单";
+        font-size: 1.2rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .main-content {
+        padding-top: 0;
+    }
+    
+    .welcome-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .course-cards, .courses-list {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .gallery-preview {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}
+
+/* 小屏幕 (手机) */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .search-box input {
+        width: 100%;
+    }
+    
+    .courses-filter {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .filter-tabs {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    
+    .course-cards, .courses-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+        max-height: 85vh;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-primary, .btn-secondary {
+        width: 100%;
+    }
+    
+    .course-actions, .course-actions-list {
+        flex-wrap: wrap;
+    }
+    
+    .btn-course, .btn-course-action {
+        flex: 1 1 45%;
+        margin-bottom: 10px;
+    }
+    
+    .quick-stats {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .course-stats, .course-meta {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .course-stat, .course-meta-item {
+        flex: 1 1 45%;
+    }
+    
+    .todo-item {
+        flex-wrap: wrap;
+    }
+    
+    .todo-priority {
+        margin-top: 10px;
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* 超小屏幕 */
+@media (max-width: 480px) {
+    .dashboard-content, .courses-content {
+        padding: 15px;
+    }
+    
+    .welcome-card, .calendar-card, .course-card, .todo-list {
+        padding: 20px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-header {
+        padding: 20px;
+    }
+    
+    .btn-course, .btn-course-action {
+        flex: 1 1 100%;
+    }
+    
+    .gallery-preview {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+    
+    .event-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .event-date {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}

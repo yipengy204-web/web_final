@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作业及考试管理</title>
+    <link rel="stylesheet" href="../CSS/exams.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边导航栏 -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-graduation-cap"></i> 成绩管理平台</h2>
+                <p>教师端</p>
+            </div>
+            
+            <div class="user-profile">
+                <div class="avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h4>张教授</h4>
+                    <p>计算机科学学院</p>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> 主面板</a></li>
+                <li><a href="courses.html"><i class="fas fa-book"></i> 课程管理</a></li>
+                <li><a href="course-content.html"><i class="fas fa-file-alt"></i> 课程内容</a></li>
+                <li class="active"><a href="exams.html"><i class="fas fa-clipboard-check"></i> 考试管理</a></li>
+                <li><a href="grades.html"><i class="fas fa-chart-line"></i> 成绩录入</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i> 退出登录</a></li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <p>当前学期: 2023-2024学年秋季</p>
+                <p>版本: v2.1.0</p>
+            </div>
+        </nav>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="header">
+                <h1>作业及考试管理</h1>
+                <div class="header-actions">
+                    
+                </div>
+            </header>
+            
+            <div class="content-wrapper">
+                <!-- 功能标签页 -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="homework">作业管理</button>
+                    <button class="tab-btn" data-tab="exam">考试管理</button>
+                    <button class="tab-btn" data-tab="grading">批改作业</button>
+                </div>
+                
+                <!-- 作业管理 -->
+                <div class="tab-content active" id="homework">
+                    <h2>布置新作业</h2>
+                    <form id="homeworkForm" class="assignment-form">
+                        <input type="text" id="hwTitle" placeholder="作业标题" required>
+                        <select id="hwCourse" required>
+                            <option value="">选择课程</option>
+                        </select>
+                        <textarea id="hwDescription" placeholder="作业描述" rows="4"></textarea>
+                        <input type="datetime-local" id="hwDeadline" required>
+                        <input type="file" id="hwAttachment" accept=".pdf,.doc,.docx,.txt">
+                        <button type="submit">发布作业</button>
+                    </form>
+                    
+                    <h2>已布置作业</h2>
+                    <div class="assignment-list" id="homeworkList">
+                        <!-- 作业列表动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 考试管理 -->
+                <div class="tab-content" id="exam">
+                    <h2>创建新考试</h2>
+                    <form id="examForm" class="assignment-form">
+                        <input type="text" id="examTitle" placeholder="考试名称" required>
+                        <select id="examCourse" required>
+                            <option value="">选择课程</option>
+                        </select>
+                        <textarea id="examDescription" placeholder="考试说明" rows="3"></textarea>
+                        <div class="datetime-group">
+                            <label>开始时间：</label>
+                            <input type="datetime-local" id="examStart" required>
+                            <label>结束时间：</label>
+                            <input type="datetime-local" id="examEnd" required>
+                        </div>
+                        <input type="number" id="examDuration" placeholder="考试时长(分钟)" required>
+                        <button type="submit">创建考试</button>
+                    </form>
+                    
+                    <h2>已创建考试</h2>
+                    <div class="assignment-list" id="examList">
+                        <!-- 考试列表动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 批改作业 -->
+                <div class="tab-content" id="grading">
+                    <h2>待批改作业</h2>
+                    <div class="grading-list" id="gradingList">
+                        <!-- 待批改列表动态生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="footer">
+                <p>© 2023 大学成绩管理平台教师端 | 作业及考试管理模块</p>
+                <p>当前学期: 2023-2024学年秋季 | 版本: v2.1.0</p>
+            </footer>
+        </main>
+    </div>
+    
+    <!-- 批改模态框 -->
+    <div id="gradingModal" class="modal">
+        <div class="modal-content">
+            <h3>批改作业</h3>
+            <div id="gradingDetails"></div>
+            <div class="grading-form">
+                <input type="number" id="gradeScore" placeholder="分数" min="0" max="100">
+                <textarea id="gradeComment" placeholder="评语" rows="3"></textarea>
+                <button onclick="submitGrade()">提交批改</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../JS/data.js"></script>
+    <script src="../JS/exams.js"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程管理 - 大学成绩管理平台</title>
+    <link rel="stylesheet" href="../CSS/courses.css">
+    <link rel="stylesheet" href="../CSS/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边导航栏 -->
+        <nav class="sidebar">
+            <!-- 这里应该是完整的导航栏，从dashboard.html复制过来 -->
+            <div class="logo">
+                <h2><i class="fas fa-graduation-cap"></i> 成绩管理平台</h2>
+                <p>教师端</p>
+            </div>
+            
+            <div class="user-profile">
+                <div class="avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h4>张教授</h4>
+                    <p>计算机科学学院</p>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> 主面板</a></li>
+                <li class="active"><a href="courses.html"><i class="fas fa-book"></i> 课程管理</a></li>
+                <li><a href="course-content.html"><i class="fas fa-file-alt"></i> 课程内容</a></li>
+                <li><a href="exams.html"><i class="fas fa-clipboard-check"></i> 考试管理</a></li>
+                <li><a href="grades.html"><i class="fas fa-chart-line"></i> 成绩录入</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i> 退出登录</a></li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <p>当前学期: 2023-2024学年秋季</p>
+                <p>版本: v2.1.0</p>
+            </div>
+        </nav>
+        
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="header">
+                <h1>课程管理</h1>
+                <div class="header-actions">
+                    <button class="btn-primary" id="addCourseBtn">
+                        <i class="fas fa-plus"></i> 创建新课程
+                    </button>
+                    <div class="search-box">
+                        <input type="text" id="courseSearch" placeholder="搜索课程名称或代码...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content-wrapper">
+                <!-- 课程筛选和搜索 -->
+                <div class="courses-filter">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">全部课程</button>
+                        <button class="filter-tab" data-filter="published">已发布</button>
+                        <button class="filter-tab" data-filter="draft">草稿</button>
+                        <button class="filter-tab" data-filter="archived">已归档</button>
+                    </div>
+                </div>
+                
+                <!-- 课程列表 -->
+                <div class="courses-list">
+                    <!-- 课程卡片将由JavaScript动态生成 -->
+                </div>
+                
+                <!-- 空状态 -->
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-book-open"></i>
+                    <h3>暂无课程</h3>
+                    <p>您还没有创建任何课程，点击"创建新课程"按钮开始吧！</p>
+                    <button class="btn-primary" id="createFirstCourseBtn">
+                        <i class="fas fa-plus"></i> 创建第一门课程
+                    </button>
+                </div>
+            </div>
+            
+            <footer class="footer">
+                <p>© 2023 大学成绩管理平台教师端 | 课程管理模块</p>
+            </footer>
+        </main>
+    </div>
+    
+    <!-- 课程详情模态框 -->
+    <div class="modal" id="courseDetailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">创建新课程</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="courseForm">
+                    <div class="form-section">
+                        <h3>基本信息</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="courseName">课程名称</label>
+                                <input type="text" id="courseName" placeholder="例如：数据结构与算法" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="courseCode">课程代码</label>
+                                <input type="text" id="courseCode" placeholder="例如：CS201" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="courseCredit">学分</label>
+                                <input type="number" id="courseCredit" min="1" max="10" value="3" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="courseClass">授课班级</label>
+                                <input type="text" id="courseClass" placeholder="例如：计科202班" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="courseSemester">学期</label>
+                            <select id="courseSemester" required>
+                                <option value="2023-2024学年秋季">2023-2024学年秋季</option>
+                                <option value="2023-2024学年春季">2023-2024学年春季</option>
+                                <option value="2024-2025学年秋季">2024-2025学年秋季</option>
+                                <option value="2024-2025学年春季">2024-2025学年春季</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>课程简介</h3>
+                        <div class="form-group">
+                            <label for="courseDescription">课程描述</label>
+                            <textarea id="courseDescription" placeholder="请输入课程简介、教学目标、教学内容等信息..." rows="6" maxlength="500"></textarea>
+                            <div class="char-count">
+                                <span id="descCharCount">0</span>/500 字符
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>课程图片</h3>
+                        
+                        <!-- 横幅图片上传 -->
+                        <div class="form-group">
+                            <label>课程横幅图片</label>
+                            <div class="upload-area" id="bannerUploadArea">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>点击或将图片拖拽到此处上传</p>
+                                <p class="upload-hint">建议尺寸：1200×400px，最大2MB</p>
+                                <input type="file" id="bannerImage" accept="image/*" hidden>
+                            </div>
+                            <div class="upload-preview" id="bannerPreview"></div>
+                        </div>
+                        
+                        <!-- 图库图片上传 -->
+                        <div class="form-group">
+                            <label>课程图库图片</label>
+                            <div class="upload-area" id="galleryUploadArea">
+                                <i class="fas fa-images"></i>
+                                <p>点击或将图片拖拽到此处上传</p>
+                                <p class="upload-hint">支持多张图片，每张最大2MB</p>
+                                <input type="file" id="galleryImages" accept="image/*" multiple hidden>
+                            </div>
+                            <div class="gallery-preview" id="galleryPreview"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>课程设置</h3>
+                        <div class="form-group">
+                            <label for="courseStatus">课程状态</label>
+                            <select id="courseStatus">
+                                <option value="draft">草稿</option>
+                                <option value="published">已发布</option>
+                                <option value="archived">已归档</option>
+                            </select>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="allowPreview">
+                            <label for="allowPreview">允许学生预览课程内容</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="previewCourseBtn">预览课程</button>
+                        <button type="button" class="btn-secondary" id="saveDraftBtn">保存草稿</button>
+                        <button type="submit" class="btn-primary" id="publishCourseBtn">发布课程</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 课程预览模态框 -->
+    <div class="modal preview-modal" id="coursePreviewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>课程预览</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="course-preview">
+                    <!-- 预览内容将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../JS/data.js"></script>
+    <script src="../JS/courses.js"></script>
+</body>
+</html>

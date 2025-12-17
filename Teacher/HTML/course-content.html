@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程内容编排 - 大学成绩管理平台</title>
+    <link rel="stylesheet" href="../CSS/course-content.css">
+    <link rel="stylesheet" href="../CSS/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边导航栏 -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-graduation-cap"></i> 成绩管理平台</h2>
+                <p>教师端</p>
+            </div>
+            
+            <div class="user-profile">
+                <div class="avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h4>张教授</h4>
+                    <p>计算机科学学院</p>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> 主面板</a></li>
+                <li><a href="courses.html"><i class="fas fa-book"></i> 课程管理</a></li>
+                <li class="active"><a href="course-content.html"><i class="fas fa-file-alt"></i> 课程内容</a></li>
+                <li><a href="exams.html"><i class="fas fa-clipboard-check"></i> 考试管理</a></li>
+                <li><a href="grades.html"><i class="fas fa-chart-line"></i> 成绩录入</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i> 退出登录</a></li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <p>当前学期: 2023-2024学年秋季</p>
+                <p>版本: v2.1.0</p>
+            </div>
+        </nav>
+        
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="header">
+                <h1>课程内容编排</h1>
+            </header>
+            
+            <div class="course-content-wrapper">
+                <!-- 页面标题和说明 -->
+                <div class="course-content-header">
+ 
+                </div>
+                
+                <!-- 课程内容页面布局 -->
+                <div class="course-content-page">
+                    <!-- 左侧：上传区域 -->
+                    <section class="upload-section">
+                        <div class="upload-section-header">
+                            <h2><i class="fas fa-cloud-upload-alt"></i> 上传课件</h2>
+                            <div class="upload-actions">
+                                <button class="btn-secondary" id="clearUploadsBtn">
+                                    <i class="fas fa-trash-alt"></i> 清空列表
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 课程选择 -->
+                        <div class="course-selector">
+                            <label for="courseSelect">选择课程 *</label>
+                            <select id="courseSelect">
+                                <option value="">请选择课程...</option>
+                                <!-- 课程选项将通过JavaScript动态生成 -->
+                            </select>
+                        </div>
+                        
+                        <!-- 上传区域 -->
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>点击或将文件拖拽到此处上传</p>
+                            <p class="upload-hint">支持文档、图片、音视频文件，单个文件不超过50MB</p>
+                            <input type="file" id="fileInput" multiple hidden>
+                        </div>
+                    
+                        
+                        <!-- 上传文件列表 -->
+                        <div class="upload-list">
+                            <h3>待上传文件</h3>
+                            <div class="upload-list-container" id="uploadListContainer">
+                                <!-- 待上传文件将在这里显示 -->
+                                <div class="empty-upload-list">
+                                    <i class="fas fa-folder-open"></i>
+                                    <p>暂无待上传文件</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 上传按钮 -->
+                        <div class="upload-actions">
+                            <button class="btn-primary" id="uploadBtn" disabled>
+                                <i class="fas fa-upload"></i> 开始上传
+                            </button>
+                        </div>
+                    </section>
+                    
+                    <!-- 右侧：课件管理区域 -->
+                    <section class="materials-section">
+                        <div class="materials-header">
+                            <h2><i class="fas fa-folder-open"></i> 已上传课件</h2>
+                            <div class="materials-stats">
+                                <span id="materialCount">0</span> 个文件
+                                <span id="materialSize">0 MB</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 材料列表筛选和排序 -->
+                        <div class="materials-filter">
+                            <div class="filter-group">
+                                <label for="sortBy">排序方式：</label>
+                                <select id="sortBy">
+                                    <option value="date-desc">按日期降序</option>
+                                    <option value="date-asc">按日期升序</option>
+                                    <option value="name-asc">按名称升序</option>
+                                    <option value="name-desc">按名称降序</option>
+                                    <option value="size-desc">按大小降序</option>
+                                    <option value="size-asc">按大小升序</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="courseFilter">课程筛选：</label>
+                                <select id="courseFilter">
+                                    <option value="all">所有课程</option>
+                                    <!-- 课程选项将通过JavaScript动态生成 -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- 课件列表 -->
+                        <div class="materials-list" id="materialsList">
+                            <!-- 课件卡片将动态添加 -->
+                        </div>
+                        
+                        <!-- 无课件提示 -->
+                        <div class="no-materials" id="noMaterials">
+                            <i class="fas fa-cloud"></i>
+                            <h3>尚未上传任何课件</h3>
+                            <p>点击左侧上传区域或拖拽文件开始上传您的第一份教学资料</p>
+                        </div>
+                        
+                        <!-- 批量操作 -->
+                        <div class="batch-actions" id="batchActions" style="display: none;">
+                            <div class="batch-info">
+                                <span id="selectedCount">0</span> 个文件被选中
+                            </div>
+                            <div class="batch-buttons">
+                                <button class="btn-secondary" id="downloadSelectedBtn">
+                                    <i class="fas fa-download"></i> 批量下载
+                                </button>
+                                <button class="btn-secondary delete" id="deleteSelectedBtn">
+                                    <i class="fas fa-trash-alt"></i> 批量删除
+                                </button>
+                                <button class="btn-secondary" id="cancelSelectionBtn">
+                                    <i class="fas fa-times"></i> 取消选择
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- 下载历史按钮 -->
+                        <div class="download-history-section">
+                            <button class="btn-secondary" id="showDownloadHistoryBtn">
+                                <i class="fas fa-history"></i> 查看下载历史
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            
+            <footer class="footer">
+                <p>© 2023 大学成绩管理平台教师端 | 课程内容编排模块</p>
+                <p>存储空间使用: <span id="storageUsage">0%</span> (已使用 <span id="usedStorage">0MB</span> / 总计 5GB)</p>
+            </footer>
+        </main>
+        
+        <!-- 删除确认模态框 -->
+        <div class="modal" id="deleteModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> 确认删除</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>您确定要删除选中的 <span id="deleteCount">0</span> 个文件吗？此操作不可恢复。</p>
+                    <div class="modal-actions">
+                        <button class="btn-modal cancel" id="cancelDeleteBtn">取消</button>
+                        <button class="btn-modal confirm" id="confirmDeleteBtn">确认删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 上传进度模态框 -->
+        <div class="modal" id="uploadProgressModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-cloud-upload-alt"></i> 上传进度</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="upload-progress-container">
+                        <div class="upload-progress-info">
+                            <p>正在上传 <span id="currentUploadFile">文件</span></p>
+                            <p><span id="uploadProgressText">0%</span></p>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="uploadProgressFill"></div>
+                        </div>
+                        <div class="upload-stats">
+                            <p>已上传: <span id="uploadedSize">0 MB</span> / 总计: <span id="totalSize">0 MB</span></p>
+                            <p>速度: <span id="uploadSpeed">0 KB/s</span></p>
+                        </div>
+                    </div>
+                    <div class="upload-queue">
+                        <h4>上传队列</h4>
+                        <div class="upload-queue-list" id="uploadQueueList">
+                            <!-- 上传队列项目将在这里显示 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 下载历史模态框 -->
+    <div class="modal" id="downloadHistoryModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-history"></i> 下载历史</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="download-history-container">
+                    <div class="history-stats">
+                        <p>共 <span id="totalDownloads">0</span> 次下载记录</p>
+                        <button class="btn-secondary" id="clearHistoryBtn">
+                            <i class="fas fa-trash-alt"></i> 清空历史
+                        </button>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <!-- 下载历史记录将在这里显示 -->
+                    </div>
+                    <div class="no-history" id="noHistory">
+                        <i class="fas fa-clock"></i>
+                        <p>暂无下载记录</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="../JS/data.js"></script>
+    <script src="../JS/course-content.js"></script>
+</body>
+</html>
