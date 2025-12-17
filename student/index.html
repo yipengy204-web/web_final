@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生端 - 教学管理系统</title>
+    <link rel="stylesheet" href="css/student.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边导航栏 -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>学生中心</h2>
+                <div class="user-info">
+                    <div class="avatar">S</div>
+                    <div class="user-details">
+                        <p class="username" id="studentName">学生姓名</p>
+                        <p class="user-id" id="studentId">学号：2021001</p>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-page="courses">
+                    <span class="icon">📚</span>
+                    <span>课程列表</span>
+                </li>
+                <li class="nav-item" data-page="my-courses">
+                    <span class="icon">📖</span>
+                    <span>我的课程</span>
+                </li>
+                <li class="nav-item" data-page="grades">
+                    <span class="icon">📊</span>
+                    <span>成绩中心</span>
+                </li>
+                <li class="nav-item" style="border-top: 1px solid rgba(255, 255, 255, 0.2); margin-top: 20px; padding-top: 20px;" onclick="resetDatabase()">
+                    <span class="icon">🔄</span>
+                    <span>重置数据</span>
+                </li>
+                <li class="nav-item logout">
+                    <span class="icon">🚪</span>
+                    <span>退出登录</span>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <div id="content-area">
+                <!-- 动态加载内容 -->
+            </div>
+        </main>
+    </div>
+
+    <!-- 页面模板 -->
+    <template id="courses-template">
+        <div class="page-header">
+            <h1>课程列表</h1>
+            <p class="subtitle">浏览并选修感兴趣的课程</p>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="courseSearch" placeholder="搜索课程名称、教师、课程编号..." oninput="searchCourses()" />
+            <div class="filter-group">
+                <select id="semesterFilter" onchange="filterCourses()">
+                    <option value="">全部学期</option>
+                    <option value="2024-1">2024-2025学年第一学期</option>
+                    <option value="2024-2">2024-2025学年第二学期</option>
+                </select>
+                <select id="categoryFilter" onchange="filterCourses()">
+                    <option value="">全部类别</option>
+                    <option value="required">必修课</option>
+                    <option value="elective">选修课</option>
+                    <option value="general">通识课</option>
+                </select>
+                <button class="btn-clear-filter" onclick="clearFilters()">🔄 清空筛选</button>
+            </div>
+        </div>
+
+        <div class="course-grid" id="courseList">
+            <!-- 课程卡片将通过 JS 动态生成 -->
+        </div>
+
+        <!-- 选课确认模态框 -->
+        <div id="enrollModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEnrollModal()">&times;</span>
+                <h2>确认选课</h2>
+                <div id="enrollCourseInfo"></div>
+                <div class="modal-actions">
+                    <button class="btn-cancel" onclick="closeEnrollModal()">取消</button>
+                    <button class="btn-primary" onclick="confirmEnroll()">确认选课</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 课程详情模态框 -->
+        <div id="courseInfoModal" class="modal">
+            <div class="modal-content modal-large">
+                <span class="close" onclick="closeCourseInfoModal()">&times;</span>
+                <h2 id="courseInfoTitle">课程详情</h2>
+                <div id="courseInfoContent" class="course-info-content">
+                    <!-- 动态加载内容 -->
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel" onclick="closeCourseInfoModal()">关闭</button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="my-courses-template">
+        <div class="page-header">
+            <h1>我的课程</h1>
+            <p class="subtitle">管理你的学习任务和课程进度</p>
+        </div>
+
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-info">
+                    <h3 id="totalCourses">0</h3>
+                    <p>已选课程</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✏️</div>
+                <div class="stat-info">
+                    <h3 id="pendingTasks">0</h3>
+                    <p>待完成任务</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-info">
+                    <h3 id="completedTasks">0</h3>
+                    <p>已完成任务</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="my-courses-container">
+            <div class="section-tabs">
+                <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">全部课程</button>
+                <button class="tab-btn" data-tab="ongoing" onclick="switchTab('ongoing')">进行中</button>
+                <button class="tab-btn" data-tab="completed" onclick="switchTab('completed')">已完成</button>
+            </div>
+
+            <div id="myCoursesList" class="my-courses-list">
+                <!-- 我的课程列表将通过 JS 动态生成 -->
+            </div>
+        </div>
+
+        <!-- 课程详情/学习任务模态框 -->
+        <div id="courseDetailModal" class="modal">
+            <div class="modal-content modal-large">
+                <span class="close" onclick="closeCourseDetailModal()">&times;</span>
+                <h2 id="courseDetailTitle">课程详情</h2>
+                
+                <div class="course-detail-tabs">
+                    <button class="detail-tab-btn active" data-tab="materials" onclick="switchDetailTab('materials')">课件资料</button>
+                    <button class="detail-tab-btn" data-tab="assignments" onclick="switchDetailTab('assignments')">作业</button>
+                    <button class="detail-tab-btn" data-tab="info" onclick="switchDetailTab('info')">课程信息</button>
+                </div>
+
+                <div id="courseDetailContent" class="course-detail-content">
+                    <!-- 动态加载内容 -->
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="grades-template">
+        <div class="page-header">
+            <h1>成绩中心</h1>
+            <p class="subtitle">查看你的学业成绩和学分绩点</p>
+        </div>
+
+        <div class="grade-summary">
+            <div class="summary-card">
+                <h3>总学分</h3>
+                <p class="summary-value" id="totalCredits">0</p>
+            </div>
+            <div class="summary-card">
+                <h3>平均绩点</h3>
+                <p class="summary-value" id="avgGPA">0.00</p>
+            </div>
+            <div class="summary-card">
+                <h3>已修课程</h3>
+                <p class="summary-value" id="completedCourses">0</p>
+            </div>
+        </div>
+
+        <div class="semester-selector">
+            <label for="semesterSelect">选择学期：</label>
+            <select id="semesterSelect" onchange="loadSemesterGrades()">
+                <option value="all">全部学期</option>
+                <option value="2024-1">2024-2025学年第一学期</option>
+                <option value="2024-2">2024-2025学年第二学期</option>
+                <option value="2023-1">2023-2024学年第一学期</option>
+                <option value="2023-2">2023-2024学年第二学期</option>
+            </select>
+        </div>
+
+        <div class="grade-table-container">
+            <table class="grade-table" id="gradeTable">
+                <thead>
+                    <tr>
+                        <th>课程编号</th>
+                        <th>课程名称</th>
+                        <th>课程类型</th>
+                        <th>学分</th>
+                        <th>成绩</th>
+                        <th>绩点</th>
+                        <th>学期</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="gradeTableBody">
+                    <!-- 成绩数据将通过 JS 动态生成 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="no-data" id="noGradeData" style="display: none;">
+            <p>📋 暂无成绩数据</p>
+        </div>
+    </template>
+
+    <template id="grade-detail-template">
+        <div class="page-header">
+            <button class="btn-back" onclick="loadPage('grades')">← 返回成绩中心</button>
+            <h1 id="courseTitle">课程成绩详情</h1>
+        </div>
+
+        <div class="grade-detail-card">
+            <div class="course-basic-info">
+                <div class="info-row">
+                    <span class="label">课程编号：</span>
+                    <span id="detailCourseCode">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">课程名称：</span>
+                    <span id="detailCourseName">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">任课教师：</span>
+                    <span id="detailTeacher">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">学分：</span>
+                    <span id="detailCredits">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">学期：</span>
+                    <span id="detailSemester">-</span>
+                </div>
+            </div>
+
+            <div class="final-grade">
+                <h2>总评成绩</h2>
+                <div class="final-grade-value" id="finalGrade">-</div>
+                <div class="final-gpa">绩点：<span id="finalGPA">-</span></div>
+            </div>
+        </div>
+
+        <div class="grade-breakdown">
+            <h2>成绩构成明细</h2>
+            <table class="breakdown-table" id="breakdownTable">
+                <thead>
+                    <tr>
+                        <th>考核项目</th>
+                        <th>权重</th>
+                        <th>得分</th>
+                        <th>状态</th>
+                        <th>提交时间</th>
+                    </tr>
+                </thead>
+                <tbody id="breakdownTableBody">
+                    <!-- 成绩明细将通过 JS 动态生成 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grade-chart">
+            <h2>成绩分析</h2>
+            <div id="gradeChart" class="chart-container">
+                <!-- 可选：添加图表展示 -->
+                <div class="chart-placeholder">
+                    <canvas id="scoreChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="js/database.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/student.js"></script>
+</body>
+</html>

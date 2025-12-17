@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>数据库查看工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        h1 {
+            color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        #output {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 IndexedDB 数据查看工具</h1>
+    
+    <div class="info">
+        <strong>用途：</strong>查看数据库中所有数据的详细内容，方便调试数据关联关系。
+    </div>
+    
+    <button onclick="testData()">🔍 查看所有数据</button>
+    <button onclick="location.href='index.html'">↩️ 返回主页</button>
+    
+    <pre id="output">点击"查看所有数据"按钮开始...</pre>
+
+    <script src="js/database.js"></script>
+    <script>
+        async function testData() {
+            const output = document.getElementById('output');
+            output.textContent = '正在加载数据...\n';
+            
+            try {
+                output.textContent += '1️⃣ 初始化数据库...\n';
+                await initDatabase();
+                
+                output.textContent += '2️⃣ 等待数据初始化...\n';
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                output.textContent += '3️⃣ 读取数据...\n';
+                const courses = await getAllData('courses');
+                const materials = await getAllData('course_materials');
+                const assignments = await getAllData('assignments');
+                const scores = await getAllData('scores');
+                const details = await getAllData('score_details');
+                const studentCourses = await getAllData('student_courses');
+                
+                if (courses.length === 0) {
+                    output.textContent = `
+⚠️ 警告：数据为空！
+
+可能原因：
+1. 数据库正在初始化中，请等待3秒后重试
+2. initSampleData() 没有执行
+3. 数据库被其他页面锁定
+
+解决方案：
+- 关闭所有 index.html 标签页
+- 刷新此页面（F5）
+- 重新点击"查看所有数据"按钮
+
+或者打开 index.html 确保数据已初始化。
+                    `;
+                    return;
+                }
+                
+                output.textContent = `
+════════════════════════════════════════
+📚 课程列表 (${courses.length} 条)
+════════════════════════════════════════
+${JSON.stringify(courses, null, 2)}
+
+════════════════════════════════════════
+📄 课件资料 (${materials.length} 条)
+════════════════════════════════════════
+${JSON.stringify(materials, null, 2)}
+
+════════════════════════════════════════
+✏️ 课程作业 (${assignments.length} 条)
+════════════════════════════════════════
+${JSON.stringify(assignments, null, 2)}
+
+════════════════════════════════════════
+📊 成绩记录 (${scores.length} 条)
+════════════════════════════════════════
+${JSON.stringify(scores, null, 2)}
+
+════════════════════════════════════════
+📋 成绩明细 (${details.length} 条)
+════════════════════════════════════════
+${JSON.stringify(details, null, 2)}
+
+════════════════════════════════════════
+📖 选课记录 (${studentCourses.length} 条)
+════════════════════════════════════════
+${JSON.stringify(studentCourses, null, 2)}
+
+════════════════════════════════════════
+✅ 数据加载完成！
+════════════════════════════════════════
+                `;
+            } catch (error) {
+                output.textContent = '❌ 错误: ' + error.message + '\n\n' + error.stack;
+            }
+        }
+        
+        // 页面加载时自动执行一次
+        window.addEventListener('DOMContentLoaded', async () => {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            // testData(); // 可以取消注释自动加载
+        });
+    </script>
+</body>
+</html>
